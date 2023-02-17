@@ -1,17 +1,17 @@
-import os
-import json
+import sys
 import torch
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
 model_id = "stabilityai/stable-diffusion-2-1"
 
-
 # Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead
-  pipe = StableDiffusionPipeline.from_pretrained(model_id)
-  pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-  pipe = pipe.to("cpu")
-  # pipe.enable_attention_slicing()
+pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(
+    pipe.scheduler.config)
+pipe = pipe.to("cuda")
+# pipe.enable_attention_slicing()
 
-  image = pipe(prompt, height=512, width=512, num_inference_steps=80).images[0]
-      
-  image.save("astronaut_rides_horse.png")
+image = pipe(sys.argv[1], height=512, width=512,
+             num_inference_steps=sys.argv[2]).images[0]
+
+image.save("astronaut_rides_horse.png")
