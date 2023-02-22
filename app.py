@@ -11,7 +11,7 @@ pipe.scheduler = DPMSolverMultistepScheduler.from_config(
 pipe = pipe.to("cuda")
 # pipe.enable_attention_slicing()
 
-image = pipe(sys.argv[1], height=512, width=512,
-             num_inference_steps=sys.argv[2]).images[0]
+image = pipe("Bald man wearing backless bikini, back", height=512, width=512,
+             num_inference_steps=400).images[0]
 
 image.save("astronaut_rides_horse.png")
